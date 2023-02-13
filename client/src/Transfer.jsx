@@ -1,7 +1,8 @@
 import { useState } from "react";
 import server from "./server";
+import React from "react";
 
-function Transfer({ address, setBalance }) {
+function Transfer({ address, setBalance, privateKey }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
 
@@ -14,6 +15,7 @@ function Transfer({ address, setBalance }) {
       const {
         data: { balance },
       } = await server.post(`send`, {
+        privateKey: privateKey,
         sender: address,
         amount: parseInt(sendAmount),
         recipient,
@@ -22,6 +24,11 @@ function Transfer({ address, setBalance }) {
     } catch (ex) {
       alert(ex.response.data.message);
     }
+  }
+
+  function refreshPage() {
+    alert("Transfer Sucessful!");
+    window.location.reload(false);
   }
 
   return (
@@ -46,7 +53,7 @@ function Transfer({ address, setBalance }) {
         ></input>
       </label>
 
-      <input type="submit" className="button" value="Transfer" />
+      <input type="submit" className="button" value="Transfer" onClick={refreshPage}/>
     </form>
   );
 }
